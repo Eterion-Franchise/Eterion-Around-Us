@@ -1,4 +1,3 @@
 [bot]
 debug = true
 request_cooldown = 0
-collect_telemetry = false
