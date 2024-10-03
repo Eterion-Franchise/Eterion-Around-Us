@@ -36,7 +36,7 @@ func Init() {
 		case CampaignsButton.Text:
 			_, err := bot.SendMessage(setMessageParams(
 				message.Chat.ChatID(),
-				"<b>Хронология событий</b>",
+				"<b>📖 Хронология событий 📖</b>",
 				KeyboardMainMenu,
 			))
 			if err != nil {
@@ -45,7 +45,7 @@ func Init() {
 		case MapsButton.Text:
 			_, err := bot.SendMessage(setMessageParams(
 				message.Chat.ChatID(),
-				"<b>Карты</b>",
+				"<b>🗺️ Карты 🗺️</b>",
 				KeyboardMainMenu,
 			))
 			if err != nil {
@@ -54,7 +54,7 @@ func Init() {
 		case BattlesButton.Text:
 			_, err := bot.SendMessage(setMessageParams(
 				message.Chat.ChatID(),
-				"<b>Битвы</b>",
+				"<b>⚔️ Битвы ⚔️</b>",
 				KeyboardMainMenu,
 			))
 			if err != nil {
@@ -63,7 +63,7 @@ func Init() {
 		case MusicButton.Text:
 			_, err := bot.SendMessage(setMessageParams(
 				message.Chat.ChatID(),
-				"<b>Плейлисты</b>",
+				"<b>🎵 Плейлисты 🎵</b>",
 				KeyboardMainMenu,
 			))
 			if err != nil {

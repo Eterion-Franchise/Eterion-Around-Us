@@ -4,7 +4,7 @@ import (
 	tu "github.com/mymmrac/telego/telegoutil"
 )
 
-var CampaignsButton = tu.KeyboardButton("🌐 Кампании")
+var CampaignsButton = tu.KeyboardButton("📖 Кампании")
 var MapsButton = tu.KeyboardButton("🗺️ Карты")
 var BattlesButton = tu.KeyboardButton("⚔️ Битвы")
 var MusicButton = tu.KeyboardButton("🎵 Музыка")
