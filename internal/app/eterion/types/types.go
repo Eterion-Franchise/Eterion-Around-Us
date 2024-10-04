@@ -12,4 +12,5 @@ const (
 	MAPS      WikiDataType = iota
 	BATTLES   WikiDataType = iota
 	MUSIC     WikiDataType = iota
+	CHARACTER WikiDataType = iota
 )

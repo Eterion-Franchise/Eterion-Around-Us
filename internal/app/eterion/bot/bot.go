@@ -3,6 +3,7 @@ package bot
 import (
 	"eterion_around_us/internal/app/eterion/errors"
 	"eterion_around_us/internal/app/eterion/types"
+	"fmt"
 	"log"
 	"os"
 
@@ -34,43 +35,70 @@ func Init() {
 	bh.HandleMessage(func(bot *telego.Bot, message telego.Message) {
 		switch message.Text {
 		case CampaignsButton.Text:
-			_, err := bot.SendMessage(setMessageParams(
+			dataString, err := formDataString(types.CAMPAIGNS)
+			if err != nil {
+				log.Println(err)
+			}
+			_, err = bot.SendMessage(setMessageParams(
 				message.Chat.ChatID(),
-				"<b>📖 Хронология событий 📖</b>\n\n1. Абоба",
+				dataString,
 				KeyboardMainMenu,
 			))
 			if err != nil {
 				log.Print(err)
 			}
 		case MapsButton.Text:
-			_, err := bot.SendMessage(setMessageParams(
+			dataString, err := formDataString(types.MAPS)
+			if err != nil {
+				log.Println(err)
+			}
+			_, err = bot.SendMessage(setMessageParams(
 				message.Chat.ChatID(),
-				"<b>🗺️ Карты 🗺️</b>",
+				dataString,
 				KeyboardMainMenu,
 			))
 			if err != nil {
 				log.Print(err)
 			}
 		case BattlesButton.Text:
-			_, err := bot.SendMessage(setMessageParams(
+			dataString, err := formDataString(types.BATTLES)
+			if err != nil {
+				log.Println(err)
+			}
+			_, err = bot.SendMessage(setMessageParams(
 				message.Chat.ChatID(),
-				"<b>⚔️ Битвы ⚔️</b>",
+				dataString,
 				KeyboardMainMenu,
 			))
 			if err != nil {
 				log.Print(err)
 			}
 		case MusicButton.Text:
-			_, err := bot.SendMessage(setMessageParams(
+			dataString, err := formDataString(types.MUSIC)
+			if err != nil {
+				log.Println(err)
+			}
+			_, err = bot.SendMessage(setMessageParams(
 				message.Chat.ChatID(),
-				"<b>🎵 Плейлисты 🎵</b>",
+				dataString,
 				KeyboardMainMenu,
 			))
 			if err != nil {
 				log.Print(err)
 			}
 		case CharButton.Text:
-			//
+			dataString, err := formDataString(types.CHARACTER)
+			if err != nil {
+				log.Println(err)
+			}
+			_, err = bot.SendMessage(setMessageParams(
+				message.Chat.ChatID(),
+				dataString,
+				KeyboardMainMenu,
+			))
+			if err != nil {
+				log.Print(err)
+			}
 		}
 	})
 
@@ -83,15 +111,23 @@ func formDataString(dataToGet types.WikiDataType) (string, error) {
 	switch dataToGet {
 	case types.CAMPAIGNS:
 		// db request
+		dataString = fmt.Sprintf("📖 <b>Хронология событий</b> 📖\n\n")
 		return dataString, nil
 	case types.MAPS:
 		// db request
+		dataString = fmt.Sprintf("🗺️ <b>Карты</b> 🗺️\n\n")
 		return dataString, nil
 	case types.BATTLES:
 		// db request
+		dataString = fmt.Sprintf("⚔️ <b>Битвы</b> ⚔️\n\n")
 		return dataString, nil
 	case types.MUSIC:
 		// db request
+		dataString = fmt.Sprintf("🎵 <b>Плейлисты</b> 🎵\n\n")
+		return dataString, nil
+	case types.CHARACTER:
+		// db request
+		dataString = fmt.Sprintf("NYI\n\n")
 		return dataString, nil
 	default:
 		dataString = "<i>Зыбучие северные ветра проносятся мимо вас, как вы слышите глухой отзвук Пустоты...</i>"
