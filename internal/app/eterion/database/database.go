@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"math/rand"
 	"os"
 
 	firebase "firebase.google.com/go/v4"
@@ -119,16 +118,18 @@ func GetSecretData() Secret {
 	return secret
 }
 
-func GetRandomKey(path string) (string, error) {
-	ref := firebaseDBClient.NewRef(path)
-	keys := []string{}
+// TODO
 
-	iter := ref.OrderByKey().LimitToFirst(100)
-	for {
-		snapshot, err := iter.Next()
-	}
-
-	randomIndex := rand.Intn(len(keys))
-
-	return keys[randomIndex], nil
-}
+//func GetRandomKey(path string) (string, error) {
+//	ref := firebaseDBClient.NewRef(path)
+//	keys := []string{}
+//
+//	iter := ref.OrderByKey().LimitToFirst(100)
+//	for {
+//		snapshot, err := iter.Next()
+//	}
+//
+//	randomIndex := rand.Intn(len(keys))
+//
+//	return keys[randomIndex], nil
+//}

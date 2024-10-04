@@ -2,3 +2,4 @@
 debug = true
 request_cooldown = 0
 parse_mode = "html"
+enable_secrets = false

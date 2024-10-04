@@ -4,6 +4,7 @@ type BotConfig struct {
 	Debug           bool   `toml:"debug"`
 	RequestCooldown int    `toml:"request_cooldown"` // NYI
 	ParseMode       string `toml:"parse_mode"`
+	EnableSecrets   bool   `toml:"enable_secrets"`
 }
 
 type WikiDataType int
