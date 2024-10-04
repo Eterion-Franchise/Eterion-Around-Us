@@ -7,8 +7,8 @@ import (
 	"github.com/mymmrac/telego"
 )
 
-func UpdateSpamResponse(username telego.User) string {
-	user := database.GetUserData(username.Username)
+func UpdateSpamResponse(telegramUser telego.User) string {
+	user := database.GetUserData(telegramUser.Username)
 
 	roll := rand.Float64()
 
@@ -22,7 +22,7 @@ func UpdateSpamResponse(username telego.User) string {
 			Variables: database.Variable{
 				SpamResponseChance: database.GetSecretData().DefaultSpamResponseChance,
 			},
-		}, username.Username)
+		}, telegramUser.Username)
 		return ""
 	} else {
 		database.UpdateUserData(database.User{
@@ -33,7 +33,7 @@ func UpdateSpamResponse(username telego.User) string {
 			Variables: database.Variable{
 				SpamResponseChance: increaseSpamResponceChance(user.Variables.SpamResponseChance),
 			},
-		}, username.Username)
+		}, telegramUser.Username)
 	}
 
 	return ""
