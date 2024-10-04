@@ -9,9 +9,7 @@ import (
 )
 
 func Init() {
-	botToken := os.Getenv("TOKEN")
-
-	bot, err := telego.NewBot(botToken, telego.WithDefaultDebugLogger())
+	bot, err := telego.NewBot(os.Getenv("TOKEN"), telego.WithDefaultDebugLogger())
 	if err != nil {
 		panic("Unable to start bot:" + err.Error())
 	}
