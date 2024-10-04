@@ -188,7 +188,7 @@ func formDataString(dataToGet types.WikiDataType) (string, error) {
 
 	switch dataToGet {
 	case types.CAMPAIGNS:
-		campaigns := database.GetCampaignData("")
+		//campaigns := database.GetCampaignData("")
 		dataString = fmt.Sprintf("📖 <b>Хронология событий</b> 📖\n\n")
 		return dataString, nil
 	case types.MAPS:
