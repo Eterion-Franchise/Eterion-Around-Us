@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"eterion_around_us/config"
 	"eterion_around_us/internal/app/eterion/errors"
 	"eterion_around_us/internal/app/eterion/types"
 	"fmt"
@@ -141,7 +142,7 @@ func setMessageParams(chatID telego.ChatID,
 	return &telego.SendMessageParams{
 		ChatID:      chatID,
 		Text:        text,
-		ParseMode:   "html",
+		ParseMode:   config.BotConfig.ParseMode,
 		ReplyMarkup: replyMarkup,
 	}
 }

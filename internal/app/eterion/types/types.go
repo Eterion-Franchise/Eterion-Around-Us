@@ -1,8 +1,9 @@
 package types
 
 type BotConfig struct {
-	Debug           bool `toml:"debug"`
-	RequestCooldown int  `toml:"request_cooldown"` // NYI
+	Debug           bool   `toml:"debug"`
+	RequestCooldown int    `toml:"request_cooldown"` // NYI
+	ParseMode       string `toml:"parse_mode"`
 }
 
 type WikiDataType int
