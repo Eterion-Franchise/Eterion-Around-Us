@@ -1,6 +1,8 @@
 package bot
 
 import (
+	"eterion_around_us/internal/app/eterion/errors"
+	"eterion_around_us/internal/app/eterion/types"
 	"log"
 	"os"
 
@@ -34,7 +36,7 @@ func Init() {
 		case CampaignsButton.Text:
 			_, err := bot.SendMessage(setMessageParams(
 				message.Chat.ChatID(),
-				"<b>📖 Хронология событий 📖</b>",
+				"<b>📖 Хронология событий 📖</b>\n\n1. Абоба",
 				KeyboardMainMenu,
 			))
 			if err != nil {
@@ -73,6 +75,28 @@ func Init() {
 	})
 
 	bh.Start()
+}
+
+func formDataString(dataToGet types.WikiDataType) (string, error) {
+	var dataString string
+
+	switch dataToGet {
+	case types.CAMPAIGNS:
+		// db request
+		return dataString, nil
+	case types.MAPS:
+		// db request
+		return dataString, nil
+	case types.BATTLES:
+		// db request
+		return dataString, nil
+	case types.MUSIC:
+		// db request
+		return dataString, nil
+	default:
+		dataString = "<i>Зыбучие северные ветра проносятся мимо вас, как вы слышите глухой отзвук Пустоты...</i>"
+		return dataString, &errors.INVALID_FORM_STRING_TYPE
+	}
 }
 
 func setMessageParams(chatID telego.ChatID,
