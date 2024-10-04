@@ -1,0 +1,44 @@
+package bot
+
+import (
+	"eterion_around_us/internal/app/eterion/database"
+	"math/rand"
+
+	"github.com/mymmrac/telego"
+)
+
+func UpdateSpamResponse(username telego.User) string {
+	user := database.GetUserData(username.Username)
+
+	roll := rand.Float64()
+
+	if roll >= user.Variables.SpamResponseChance {
+		// get secret phrase from db and return it
+		database.UpdateUserData(database.User{
+			UUID:          user.UUID,
+			TgUserID:      user.TgUserID,
+			IsWhitelisted: true,
+			IsGM:          false,
+			Variables: database.Variable{
+				SpamResponseChance: database.GetSecretData().DefaultSpamResponseChance,
+			},
+		}, username.Username)
+		return ""
+	} else {
+		database.UpdateUserData(database.User{
+			UUID:          user.UUID,
+			TgUserID:      user.TgUserID,
+			IsWhitelisted: true,
+			IsGM:          false,
+			Variables: database.Variable{
+				SpamResponseChance: increaseSpamResponceChance(user.Variables.SpamResponseChance),
+			},
+		}, username.Username)
+	}
+
+	return ""
+}
+
+func increaseSpamResponceChance(currentChance float64) float64 {
+	return currentChance * database.GetSecretData().SpamResponseChanceFactor
+}

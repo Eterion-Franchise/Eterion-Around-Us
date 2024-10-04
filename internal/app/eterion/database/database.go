@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 
 	firebase "firebase.google.com/go/v4"
@@ -59,6 +60,14 @@ func AddUserData(user User) {
 	}
 }
 
+func UpdateUserData(user User, username string) {
+	ref := firebaseDBClient.NewRef("users/" + username)
+
+	if err := ref.Set(context.TODO(), user); err != nil {
+		log.Fatalln("error setting user data:", err)
+	}
+}
+
 func IsUserExists(username string) bool {
 	ref := firebaseDBClient.NewRef("users/" + username)
 
@@ -97,4 +106,29 @@ func AddCampaignData(campaign Campaign) {
 	if err := newCampaignRef.Set(context.TODO(), campaign); err != nil {
 		log.Fatalln("error setting campaign data:", err)
 	}
+}
+
+func GetSecretData() Secret {
+	ref := firebaseDBClient.NewRef("secrets")
+
+	var secret Secret
+	if err := ref.Get(context.TODO(), &secret); err != nil {
+		log.Fatalln("error retrieving secret data:", err)
+	}
+
+	return secret
+}
+
+func GetRandomKey(path string) (string, error) {
+	ref := firebaseDBClient.NewRef(path)
+	keys := []string{}
+
+	iter := ref.OrderByKey().LimitToFirst(100)
+	for {
+		snapshot, err := iter.Next()
+	}
+
+	randomIndex := rand.Intn(len(keys))
+
+	return keys[randomIndex], nil
 }

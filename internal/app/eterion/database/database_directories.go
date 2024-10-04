@@ -24,7 +24,7 @@ type Campaign struct {
 	PosterURL   string    `json:"poster_url"`
 	Synopsis    string    `json:"synopsis"`
 	Recap       string    `json:"recap"`
-	PlaylistID  string    `json:"playlist_id`
+	PlaylistID  string    `json:"playlist_id"`
 	IsPlanned   bool      `json:"is_planned"`
 	IsPlayed    bool      `json:"is_played"`
 	IsVisible   bool      `json:"is_visible"`
@@ -32,11 +32,16 @@ type Campaign struct {
 	Wish        wish      `json:"wish"`
 }
 
+type Variable struct {
+	SpamResponseChance float64 `json:"spam_response_chance"`
+}
+
 type User struct {
 	UUID          uuid.UUID `json:"uuid"`
-	TgUserID      string    `json:"tg_user_id`
+	TgUserID      string    `json:"tg_user_id"`
 	IsWhitelisted bool      `json:"is_whitelisted"`
 	IsGM          bool      `json:"is_gm"`
+	Variables     Variable  `json:"variables"`
 }
 
 type Map struct {
@@ -57,4 +62,14 @@ type Character struct {
 	OwnerUUID  uuid.UUID `json:"owner_uuid"`
 	Status     string    `json:"status"`
 	Stats      stats     `json:"stats"`
+}
+
+type Secret struct {
+	DefaultSpamResponseChance float64  `json:"default_spam_response_chance"`
+	SpamResponseChanceFactor  float64  `json:"spam_response_chance_factor"`
+	Responses                 Response `json:"responses"`
+}
+
+type Response struct {
+	SpamResponse string `json:"spam_response"`
 }

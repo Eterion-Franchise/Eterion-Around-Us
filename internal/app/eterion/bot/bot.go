@@ -154,7 +154,15 @@ func Init() {
 				log.Print(err)
 			}
 		default:
-			//
+			dataString := UpdateSpamResponse(*message.From)
+			_, err := bot.SendMessage(setMessageParams(
+				message.Chat.ChatID(),
+				dataString,
+				KeyboardMainMenu,
+			))
+			if err != nil {
+				log.Print(err)
+			}
 		}
 	})
 
