@@ -2,18 +2,26 @@ package bot
 
 import (
 	"eterion_around_us/config"
+	"eterion_around_us/internal/app/eterion/database"
 	"eterion_around_us/internal/app/eterion/errors"
 	"eterion_around_us/internal/app/eterion/types"
 	"fmt"
 	"log"
 	"os"
 
+	"github.com/google/uuid"
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
 )
 
 func Init() {
-	bot, err := telego.NewBot(os.Getenv("TOKEN"), telego.WithDefaultDebugLogger())
+	var botDebugOption telego.BotOption
+	if config.BotConfig.Debug {
+		botDebugOption = telego.WithDefaultDebugLogger()
+	} else {
+		botDebugOption = nil
+	}
+	bot, err := telego.NewBot(os.Getenv("TOKEN"), botDebugOption)
 	if err != nil {
 		panic("Unable to start bot:" + err.Error())
 	}
@@ -23,13 +31,49 @@ func Init() {
 	bh, _ := th.NewBotHandler(bot, updates)
 
 	bh.Handle(func(bot *telego.Bot, update telego.Update) {
-		_, err := bot.SendMessage(setMessageParams(
-			update.Message.Chat.ChatID(),
-			"<i>Вы в архиве Этериона. Какое знание вы хотите открыть сегодня?</i>",
-			KeyboardMainMenu,
-		))
-		if err != nil {
-			log.Print(err)
+		if database.IsUserExists(update.Message.From.Username) {
+			isUserFlagged, err := isUserFlagged(*update.Message.From, types.FLAG_USER_WHITELISTED)
+			if err != nil {
+				log.Printf("Error getting user flag: %v\n", err)
+			}
+			if isUserFlagged {
+				_, err := bot.SendMessage(setMessageParams(
+					update.Message.Chat.ChatID(),
+					"<i>Вы в архиве Этериона. Какое знание вы хотите открыть сегодня?</i>",
+					KeyboardMainMenu,
+				))
+				if err != nil {
+					log.Println(err)
+				}
+			} else {
+				_, err := bot.SendMessage(setMessageParams(
+					update.Message.Chat.ChatID(),
+					"<i>Входя в величсественные залы архива, вас окружает лишь тьма...</i>",
+					KeyboardNoAccess,
+				))
+				if err != nil {
+					log.Println(err)
+				}
+			}
+		} else {
+			newUserUUID, err := uuid.NewUUID()
+			if err != nil {
+				log.Println(err)
+			}
+			database.AddUserData(database.User{
+				UUID:          newUserUUID,
+				TgUserID:      update.Message.From.Username,
+				IsWhitelisted: false,
+				IsGM:          false,
+			})
+			_, err = bot.SendMessage(setMessageParams(
+				update.Message.Chat.ChatID(),
+				"<i>Вы в архиве Этериона. Какое знание вы хотите открыть сегодня?</i>",
+				nil,
+			))
+			if err != nil {
+				log.Println(err)
+			}
 		}
 	}, th.CommandEqual("start"))
 
@@ -100,10 +144,33 @@ func Init() {
 			if err != nil {
 				log.Print(err)
 			}
+		case NoAccessButton.Text:
+			_, err := bot.SendMessage(setMessageParams(
+				message.Chat.ChatID(),
+				"У вас нет доступа к архиву Этериона. Если вы уверены, что это не так, взовите к Перворожденным",
+				nil,
+			))
+			if err != nil {
+				log.Print(err)
+			}
+		default:
+			//
 		}
 	})
 
 	bh.Start()
+}
+
+func isUserFlagged(tgUserId telego.User, userFlag types.UserFlag) (bool, error) {
+	user := database.GetUserData(tgUserId.Username)
+	switch userFlag {
+	case types.FLAG_USER_WHITELISTED:
+		return user.IsWhitelisted, nil
+	case types.FLAG_USER_GM:
+		return user.IsGM, nil
+	default:
+		return false, &errors.INVALID_USER_FLAG
+	}
 }
 
 func formDataString(dataToGet types.WikiDataType) (string, error) {
@@ -111,7 +178,7 @@ func formDataString(dataToGet types.WikiDataType) (string, error) {
 
 	switch dataToGet {
 	case types.CAMPAIGNS:
-		// db request
+		campaigns := database.GetCampaignData("")
 		dataString = fmt.Sprintf("📖 <b>Хронология событий</b> 📖\n\n")
 		return dataString, nil
 	case types.MAPS:

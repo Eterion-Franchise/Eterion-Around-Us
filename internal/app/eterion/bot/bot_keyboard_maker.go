@@ -10,6 +10,8 @@ var BattlesButton = tu.KeyboardButton("⚔️ Битвы")
 var MusicButton = tu.KeyboardButton("🎵 Музыка")
 var CharButton = tu.KeyboardButton("🧙‍♂️ Персонаж")
 
+var NoAccessButton = tu.KeyboardButton("Почему я вижу это сообщение?")
+
 var KeyboardMainMenu = tu.Keyboard(
 	tu.KeyboardRow(
 		CampaignsButton,
@@ -21,3 +23,9 @@ var KeyboardMainMenu = tu.Keyboard(
 		CharButton,
 	),
 ).WithResizeKeyboard()
+
+var KeyboardNoAccess = tu.Keyboard(
+	tu.KeyboardRow(
+		NoAccessButton,
+	),
+)

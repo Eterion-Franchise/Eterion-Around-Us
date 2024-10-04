@@ -15,3 +15,10 @@ const (
 	MUSIC     WikiDataType = iota
 	CHARACTER WikiDataType = iota
 )
+
+type UserFlag int
+
+const (
+	FLAG_USER_WHITELISTED UserFlag = iota
+	FLAG_USER_GM          UserFlag = iota
+)
