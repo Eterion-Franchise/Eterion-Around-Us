@@ -28,4 +28,4 @@ var KeyboardNoAccess = tu.Keyboard(
 	tu.KeyboardRow(
 		NoAccessButton,
 	),
-)
+).WithResizeKeyboard()

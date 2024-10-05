@@ -20,7 +20,7 @@ func Init() {
 		DatabaseURL: os.Getenv("DATABASE_URL"),
 	}
 
-	opt := option.WithCredentialsFile("./config/credentials.json")
+	opt := option.WithAPIKey(os.Getenv("FIREBASE_API"))
 	app, err := firebase.NewApp(ctx, conf, opt)
 	if err != nil {
 		panic("Unable to init firebase app:" + err.Error())
@@ -46,15 +46,9 @@ func GetUserData(username string) User {
 }
 
 func AddUserData(user User) {
-	ref := firebaseDBClient.NewRef("users")
+	ref := firebaseDBClient.NewRef(fmt.Sprintf("users/%s", user.TgUserID))
 
-	var emptyInterface interface{}
-	newUserRef, err := ref.Push(context.TODO(), emptyInterface)
-	if err != nil {
-		log.Fatalln("error creating new user:", err)
-	}
-
-	if err := newUserRef.Set(context.TODO(), user); err != nil {
+	if err := ref.Set(context.TODO(), user); err != nil {
 		log.Fatalln("error setting user data:", err)
 	}
 }
@@ -96,13 +90,7 @@ func GetCampaignData(campaignName string) Campaign {
 func AddCampaignData(campaign Campaign) {
 	ref := firebaseDBClient.NewRef("campaigns")
 
-	var emptyInterface interface{}
-	newCampaignRef, err := ref.Push(context.TODO(), emptyInterface)
-	if err != nil {
-		log.Fatalln("error creating new campaign:", err)
-	}
-
-	if err := newCampaignRef.Set(context.TODO(), campaign); err != nil {
+	if err := ref.Set(context.TODO(), campaign); err != nil {
 		log.Fatalln("error setting campaign data:", err)
 	}
 }

@@ -15,13 +15,14 @@ import (
 )
 
 func Init() {
-	var botDebugOption telego.BotOption
-	if config.BotConfig.Debug {
-		botDebugOption = telego.WithDefaultDebugLogger()
-	} else {
-		botDebugOption = nil
-	}
-	bot, err := telego.NewBot(os.Getenv("TOKEN"), botDebugOption)
+	// NULL point reference here for some reason
+	//var botDebugOption telego.BotOption
+	//if config.BotConfig.Debug {
+	//	botDebugOption = telego.WithDefaultDebugLogger()
+	//} else {
+	//	botDebugOption = nil
+	//}
+	bot, err := telego.NewBot(os.Getenv("BOT_TOKEN"), telego.WithDefaultDebugLogger())
 	if err != nil {
 		panic("Unable to start bot:" + err.Error())
 	}
@@ -65,11 +66,14 @@ func Init() {
 				TgUserID:      update.Message.From.Username,
 				IsWhitelisted: false,
 				IsGM:          false,
+				Variables: database.Variable{
+					SpamResponseChance: database.GetSecretData().DefaultSpamResponseChance,
+				},
 			})
 			_, err = bot.SendMessage(setMessageParams(
 				update.Message.Chat.ChatID(),
-				"<i>Вы в архиве Этериона. Какое знание вы хотите открыть сегодня?</i>",
-				nil,
+				"<i>Входя в величсественные залы архива, вас окружает лишь тьма...</i>",
+				KeyboardNoAccess,
 			))
 			if err != nil {
 				log.Println(err)
