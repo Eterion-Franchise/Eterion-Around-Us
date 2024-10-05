@@ -17,8 +17,8 @@ func UpdateSpamResponse(telegramUser telego.User) string {
 		database.UpdateUserData(database.User{
 			UUID:          user.UUID,
 			TgUserID:      user.TgUserID,
-			IsWhitelisted: true,
-			IsGM:          false,
+			IsWhitelisted: user.IsWhitelisted,
+			IsGM:          user.IsGM,
 			Variables: database.Variable{
 				SpamResponseChance: database.GetSecretData().DefaultSpamResponseChance,
 			},
@@ -28,8 +28,8 @@ func UpdateSpamResponse(telegramUser telego.User) string {
 		database.UpdateUserData(database.User{
 			UUID:          user.UUID,
 			TgUserID:      user.TgUserID,
-			IsWhitelisted: true,
-			IsGM:          false,
+			IsWhitelisted: user.IsWhitelisted,
+			IsGM:          user.IsGM,
 			Variables: database.Variable{
 				SpamResponseChance: increaseSpamResponceChance(user.Variables.SpamResponseChance),
 			},

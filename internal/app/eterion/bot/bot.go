@@ -82,85 +82,18 @@ func Init() {
 	}, th.CommandEqual("start"))
 
 	bh.HandleMessage(func(bot *telego.Bot, message telego.Message) {
-		switch message.Text {
-		case CampaignsButton.Text:
-			dataString, err := formDataString(types.CAMPAIGNS)
-			if err != nil {
-				log.Println(err)
-			}
-			_, err = bot.SendMessage(setMessageParams(
-				message.Chat.ChatID(),
-				dataString,
-				KeyboardMainMenu,
-			))
-			if err != nil {
-				log.Print(err)
-			}
-		case MapsButton.Text:
-			dataString, err := formDataString(types.MAPS)
-			if err != nil {
-				log.Println(err)
-			}
-			_, err = bot.SendMessage(setMessageParams(
-				message.Chat.ChatID(),
-				dataString,
-				KeyboardMainMenu,
-			))
-			if err != nil {
-				log.Print(err)
-			}
-		case BattlesButton.Text:
-			dataString, err := formDataString(types.BATTLES)
-			if err != nil {
-				log.Println(err)
-			}
-			_, err = bot.SendMessage(setMessageParams(
-				message.Chat.ChatID(),
-				dataString,
-				KeyboardMainMenu,
-			))
-			if err != nil {
-				log.Print(err)
-			}
-		case MusicButton.Text:
-			dataString, err := formDataString(types.MUSIC)
-			if err != nil {
-				log.Println(err)
-			}
-			_, err = bot.SendMessage(setMessageParams(
-				message.Chat.ChatID(),
-				dataString,
-				KeyboardMainMenu,
-			))
-			if err != nil {
-				log.Print(err)
-			}
-		case CharButton.Text:
-			dataString, err := formDataString(types.CHARACTER)
-			if err != nil {
-				log.Println(err)
-			}
-			_, err = bot.SendMessage(setMessageParams(
-				message.Chat.ChatID(),
-				dataString,
-				KeyboardMainMenu,
-			))
-			if err != nil {
-				log.Print(err)
-			}
-		case NoAccessButton.Text:
-			_, err := bot.SendMessage(setMessageParams(
-				message.Chat.ChatID(),
-				"У вас нет доступа к архиву Этериона. Если вы уверены, что это не так, взовите к Перворожденным",
-				nil,
-			))
-			if err != nil {
-				log.Print(err)
-			}
-		default:
-			if config.BotConfig.EnableSecrets {
-				dataString := UpdateSpamResponse(*message.From)
-				_, err := bot.SendMessage(setMessageParams(
+		isUserFlagged, err := isUserFlagged(*message.From, types.FLAG_USER_WHITELISTED)
+		if err != nil {
+			log.Printf("Error getting user flag: %v\n", err)
+		}
+		if isUserFlagged {
+			switch message.Text {
+			case CampaignsButton.Text:
+				dataString, err := formDataString(types.CAMPAIGNS)
+				if err != nil {
+					log.Println(err)
+				}
+				_, err = bot.SendMessage(setMessageParams(
 					message.Chat.ChatID(),
 					dataString,
 					KeyboardMainMenu,
@@ -168,6 +101,88 @@ func Init() {
 				if err != nil {
 					log.Print(err)
 				}
+			case MapsButton.Text:
+				dataString, err := formDataString(types.MAPS)
+				if err != nil {
+					log.Println(err)
+				}
+				_, err = bot.SendMessage(setMessageParams(
+					message.Chat.ChatID(),
+					dataString,
+					KeyboardMainMenu,
+				))
+				if err != nil {
+					log.Print(err)
+				}
+			case BattlesButton.Text:
+				dataString, err := formDataString(types.BATTLES)
+				if err != nil {
+					log.Println(err)
+				}
+				_, err = bot.SendMessage(setMessageParams(
+					message.Chat.ChatID(),
+					dataString,
+					KeyboardMainMenu,
+				))
+				if err != nil {
+					log.Print(err)
+				}
+			case MusicButton.Text:
+				dataString, err := formDataString(types.MUSIC)
+				if err != nil {
+					log.Println(err)
+				}
+				_, err = bot.SendMessage(setMessageParams(
+					message.Chat.ChatID(),
+					dataString,
+					KeyboardMainMenu,
+				))
+				if err != nil {
+					log.Print(err)
+				}
+			case CharButton.Text:
+				dataString, err := formDataString(types.CHARACTER)
+				if err != nil {
+					log.Println(err)
+				}
+				_, err = bot.SendMessage(setMessageParams(
+					message.Chat.ChatID(),
+					dataString,
+					KeyboardMainMenu,
+				))
+				if err != nil {
+					log.Print(err)
+				}
+			case NoAccessButton.Text:
+				_, err := bot.SendMessage(setMessageParams(
+					message.Chat.ChatID(),
+					"У вас нет доступа к архиву Этериона. Если вы уверены, что это не так, взовите к Перворожденным",
+					nil,
+				))
+				if err != nil {
+					log.Print(err)
+				}
+			default:
+				if config.BotConfig.EnableSecrets {
+					dataString := UpdateSpamResponse(*message.From)
+					_, err := bot.SendMessage(setMessageParams(
+						message.Chat.ChatID(),
+						dataString,
+						KeyboardMainMenu,
+					))
+					if err != nil {
+						log.Print(err)
+					}
+				}
+			}
+		} else {
+			_, err = bot.SendMessage(setMessageParams(
+				message.Chat.ChatID(),
+				"<i>Входя в величсественные залы архива, вас окружает лишь тьма...</i>",
+				KeyboardNoAccess,
+			))
+			if err != nil {
+				log.Println(err)
 			}
 		}
 	})
