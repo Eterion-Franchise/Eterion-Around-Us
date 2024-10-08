@@ -15,7 +15,7 @@ import (
 )
 
 func Init() {
-	// NULL point reference here for some reason
+	// NULL point reference here for some reason (config simply does not work)
 	//var botDebugOption telego.BotOption
 	//if config.BotConfig.Debug {
 	//	botDebugOption = telego.WithDefaultDebugLogger()
