@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 
 	"github.com/google/uuid"
 	"github.com/mymmrac/telego"
@@ -62,7 +63,7 @@ func Init() {
 				log.Println(err)
 			}
 			database.AddUserData(database.User{
-				UUID:          newUserUUID,
+				UUID:          newUserUUID.String(),
 				TgUserID:      update.Message.From.Username,
 				IsWhitelisted: false,
 				IsGM:          false,
@@ -207,8 +208,20 @@ func formDataString(dataToGet types.WikiDataType) (string, error) {
 
 	switch dataToGet {
 	case types.CAMPAIGNS:
-		//campaigns := database.GetCampaignData("")
-		dataString = fmt.Sprintf("📖 <b>Хронология событий</b> 📖\n\n")
+		campaigns, amountOfCampaigns, err := database.GetAllCampaigns()
+		if err != nil {
+			return "", err
+		}
+
+		sort.Sort(database.ByCampaignOrder(campaigns))
+
+		dataString = "📖 <b>Хронология событий</b> 📖\n\n"
+		for i := 1; i <= amountOfCampaigns; i++ {
+			dataString += fmt.Sprintf("%d. %s\n", i, campaigns[i-1].Title)
+		}
+
+		dataString += fmt.Sprintf("<i>%d. Что будущее нам готовит...</i>\n\n", amountOfCampaigns+1)
+
 		return dataString, nil
 	case types.MAPS:
 		// db request

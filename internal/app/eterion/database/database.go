@@ -76,6 +76,25 @@ func IsUserExists(username string) bool {
 	return result != nil && len(result) > 0
 }
 
+func GetAllCampaigns() ([]Campaign, int, error) {
+	ref, err := firebaseDBClient.NewRef("campaigns").OrderByValue().GetOrdered(context.Background())
+	if err != nil {
+		return []Campaign{}, 0, err
+	}
+
+	var campaigns []Campaign
+	for _, child := range ref {
+		var campaign Campaign
+		if err := child.Unmarshal(&campaign); err != nil {
+			return []Campaign{}, 0, err
+		}
+
+		campaigns = append(campaigns, campaign)
+	}
+
+	return campaigns, len(campaigns), nil
+}
+
 func GetCampaignData(campaignName string) Campaign {
 	ref := firebaseDBClient.NewRef(fmt.Sprintf("campaigns/%s", campaignName))
 
